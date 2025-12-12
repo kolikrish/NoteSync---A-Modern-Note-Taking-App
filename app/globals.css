@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+*::selection {
+  background-color: #9233ea18;
+}
+
+*::-moz-selection {
+  background: #9233ea18;
+}
+
+* {
+  -webkit-user-select: #9233ea18;
+  -moz-user-select: #9233ea18;
+  -ms-user-select: #9233ea18;
+  user-select: #9233ea18;
+
+}
+
+* {
+  -webkit-tap-highlight-color: #9233ea18;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.poppins-font {
+  font-family: "Montserrat", sans-serif;
+}
+
