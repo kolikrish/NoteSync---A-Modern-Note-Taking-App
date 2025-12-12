@@ -44,18 +44,19 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    // declare timeoutId using let, but don't re-declare later in function scope
-    let timeoutId: ReturnType<typeof setTimeout>;
-
     async function checkAuth() {
       try {
         const {
           data: { session },
         } = await supabase.auth.getSession();
-
+  
         if (session?.user && session.user.id && session.user.email) {
-          setUser({ id: session.user.id as string, email: session.user.email as string });
-          // Optionally, fetchUserProfile(session.user.id as string);
+          setUser({
+            id: session.user.id as string,
+            email: session.user.email as string,
+          });
+          // Optionally fetch profile
+          // fetchUserProfile(session.user.id as string);
         } else {
           setUser(null);
           setUserProfile(null);
@@ -63,36 +64,39 @@ export default function Navbar() {
       } catch (error) {
         setUser(null);
         setUserProfile(null);
-        console.log('Error occured here', error);
-        // Optionally log error
+        console.log("Error occurred here", error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    // Listen for auth changes
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user && session.user.id && session.user.email) {
-        setUser({ id: session.user.id as string, email: session.user.email as string });
-        fetchUserProfile(session.user.id as string);
-      } else {
-        setUser(null);
-        setUserProfile(null);
-      }
-    });
-    const subscription = data?.subscription;
+  // Listen for auth changes
+  const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.user && session.user.id && session.user.email) {
+      setUser({
+        id: session.user.id as string,
+        email: session.user.email as string,
+      });
+      fetchUserProfile(session.user.id as string);
+    } else {
+      setUser(null);
+      setUserProfile(null);
+    }
+  });
 
-    checkAuth();
+  const subscription = data?.subscription;
+
+  checkAuth();
 
     // Prevent indefinite loading state
-    timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
-    
+  
     return () => {
       clearTimeout(timeoutId);
-      subscription.unsubscribe();
-    };    
+      subscription?.unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
