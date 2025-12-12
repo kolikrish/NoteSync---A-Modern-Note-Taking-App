@@ -44,6 +44,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    // declare timeoutId using let, but don't re-declare later in function scope
     let timeoutId: ReturnType<typeof setTimeout>;
 
     async function checkAuth() {
@@ -87,11 +88,11 @@ export default function Navbar() {
     timeoutId = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
-
+    
     return () => {
       clearTimeout(timeoutId);
       subscription.unsubscribe();
-    };
+    };    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
