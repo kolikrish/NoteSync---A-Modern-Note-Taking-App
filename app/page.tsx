@@ -15,13 +15,19 @@ export default function Home() {
   // const router = useRouter();
 
   useEffect(() => {
+    let isMounted = true;
     async function getUser() {
       const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-      setIsLoading(false);
+      if (isMounted) {
+        setUser(session?.user || null);
+        setIsLoading(false);
+      }
     }
     getUser();
-  }, []);
+    return () => {
+      isMounted = false;
+    };
+  }, [supabase]);
 
   const container = {
     hidden: { opacity: 0 },
@@ -134,6 +140,37 @@ export default function Home() {
             </p>
           </motion.div>
 
+          {/* Define valid Framer Motion variant objects for container and item */}
+          {/*
+            Framer Motion's Transition type for "type" is 'tween' | 'spring' | 'inertia' | 'keyframes' | undefined,
+            not arbitrary string. We'll use "spring" or "tween" as appropriate.
+          */}
+          {/*
+            You can also define these at the top of your file if desired.
+          */}
+          {/*
+          const container = {
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.18,
+                delayChildren: 0.2
+              }
+            }
+          };
+          const item = {
+            hidden: { y: 20, opacity: 0 },
+            show: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                type: "spring", // using allowed value
+                stiffness: 320
+              }
+            }
+          };
+          */}
           <div className="mt-16 max-w-5xl mx-auto">
             <motion.div
               variants={container}
@@ -173,7 +210,17 @@ export default function Home() {
               ].map((feature, index) => (
                 <motion.div
                   key={index}
-                  variants={item}
+                  variants={{
+                    hidden: { y: 20, opacity: 0 },
+                    show: {
+                      y: 0,
+                      opacity: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 320
+                      }
+                    }
+                  }}
                   className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-md bg-purple-600 text-white">
